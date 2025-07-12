@@ -1,5 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
+default_user:
+  login: claudia@teste.com
+  
 one:
   login: claudiabrito@teste.com
 
@@ -8,4 +10,3 @@ two:
 
 three:
   login: ""
-  

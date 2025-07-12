@@ -36,7 +36,13 @@ class UserTest < ActiveSupport::TestCase
     assert_includes user2.errors[:login], "has already been taken"
   end
 
-  test "login can't have special caracters" do
-    
+ test "login can't have special characters" do
+    invalid_logins = [ "Grif!noria", "$onserina", "Lufa lufa" ]
+
+    invalid_logins.each do |login|
+      user = User.new(login: login)
+      assert_not user.valid?, "#{login.inspect} should be invalid"
+      assert_includes user.errors[:login], "only allows letters, numbers, underscores, dots and dashes"
+    end
   end
 end
