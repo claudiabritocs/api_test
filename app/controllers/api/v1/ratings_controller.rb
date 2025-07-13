@@ -7,11 +7,13 @@ module Api
       end
 
       def create
-        rating = Rating.new(rating_params)
+        post_id = rating_params[:post_id]
+        user_id = rating_params[:user_id]
+        value = rating_params[:value]
 
-        return render_validation_errors(rating) unless rating.save
+        Rating::ProcessJob.perform_later(post_id, user_id, value)
 
-        render json: rating, status: :created
+        render json: { message: 'Rating is being processed' }, status: :accepted
       end
 
       private
