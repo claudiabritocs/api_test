@@ -1,6 +1,7 @@
 class CreatePostWithUser
-    def initialize(params)
+    def initialize(params, ip)
         @params = params
+        @ip = ip
     end
 
     def call
@@ -19,6 +20,6 @@ class CreatePostWithUser
         end
 
         filtered_params = @params.except(:login, :user_id)
-        Post.new(filtered_params.merge(user: user))
+        Post.new(filtered_params.merge(user: user, ip: @ip))
     end
 end
