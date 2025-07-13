@@ -1,7 +1,11 @@
 class ApplicationController < ActionController::API
   include ResponseHelper
 
-  rescue_from(ActionController::ParameterMissing) do |e|
-    render_error(e.message, :bad_request)
+  rescue_from(ActionController::ParameterMissing) do |error|
+    render_error(error.message, :bad_request)
+  end
+
+  rescue_from(ArgumentError) do |error|
+    render_error(error.message, :unprocessable_entity)
   end
 end

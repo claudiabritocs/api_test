@@ -4,6 +4,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:default_user)
   end
+
   test "should get index" do
     get api_v1_posts_index_path
     assert_response :success
@@ -33,6 +34,19 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
     assert_equal @user.id, json["user_id"]
   end
+
+  test "should create post with login instead of user_id" do
+    login = "login_enviado@test.com"
+    
+    post api_v1_posts_path,
+      params: { post: { login: login, title: "Titulo login enviado", body: "conteudo login enviado", ip: "127.0.0.1" } },
+      as: :json
+
+    assert_response :created
+    json = JSON.parse(response.body)
+    assert_equal login, User.find(json["user_id"]).login
+  end
+
   test "should create a post with title not null" do
     post api_v1_posts_path,
       params: { post: { user_id: @user.id, title: "", body: "Any2", ip: "127.0.0.1" } },

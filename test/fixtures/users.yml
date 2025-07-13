@@ -8,5 +8,6 @@ one:
 two:
   login: britoclaudia@teste.com
 
+# Usado para testes de falhas
 three:
   login: ""

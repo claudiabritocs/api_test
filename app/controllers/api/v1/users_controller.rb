@@ -8,7 +8,7 @@ module Api
 
       def create
         login = user_params[:login]
-        return render_error("Login is required, can't be blank.") if login.blank?
+        return render_error("Login is required, can't be blank.", :unprocessable_entity) if login.blank?
 
         user = User.new(login: login)
         return render_validation_errors(user) unless user.save
