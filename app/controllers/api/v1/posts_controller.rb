@@ -10,9 +10,9 @@ class Api::V1::PostsController < ApplicationController
     return render_validation_errors(post) unless post.save
 
     render json: post, status: :created
-    
-    rescue ArgumentError => e
-      render_error(e.message, :unprocessable_entity)
+
+  rescue ArgumentError => e
+    render_error(e.message, :unprocessable_entity)
   end
 
   private

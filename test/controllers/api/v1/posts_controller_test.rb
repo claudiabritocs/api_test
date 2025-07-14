@@ -1,4 +1,5 @@
 require "test_helper"
+require "mocha/minitest"
 
 class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -37,7 +38,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create post with login instead of user_id" do
     login = "login_enviado@test.com"
-    
+
     post api_v1_posts_path,
       params: { post: { login: login, title: "Titulo login enviado", body: "conteudo login enviado", ip: "127.0.0.1" } },
       as: :json
@@ -66,8 +67,10 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create a post with ip not null" do
+    ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(nil)
+
     post api_v1_posts_path,
-      params: { post: { user_id: @user.id, title: "Any", body: "Any2", ip: "" } },
+      params: { post: { user_id: @user.id, title: "Any", body: "Any2" } },
       as: :json
     assert_response :unprocessable_entity
     json = JSON.parse(response.body)

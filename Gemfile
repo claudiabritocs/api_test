@@ -44,8 +44,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "mocha"
 end
 
 gem "sidekiq", "~> 8.0"
-
-gem "rspec", "~> 3.0"

@@ -1,26 +1,40 @@
-module Api
-  module V1
-    class RatingsController < ApplicationController
-      def index
-        ratings = Rating.all
-        render json: ratings
-      end
+class Api::V1::RatingsController < ApplicationController
+  def index
+    ratings = Rating.all
+    render json: ratings
+  end
 
-      def create
-        post_id = rating_params[:post_id]
-        user_id = rating_params[:user_id]
-        value = rating_params[:value]
+  def create
+    rating_params = params.require(:rating).permit(:post_id, :user_id, :value)
 
-        Rating::ProcessJob.perform_later(post_id, user_id, value)
+    post_id = rating_params[:post_id]
+    user_id = rating_params[:user_id]
+    value = rating_params[:value].to_i
 
-        render json: { message: 'Rating is being processed' }, status: :accepted
-      end
-
-      private
-
-      def rating_params
-        params.require(:rating).permit(:post_id, :user_id, :value)
-      end
+    if post_id.blank? || user_id.blank? || value.blank?
+      return render_error("Missing parameters: post_id, user_id, and value are required.")
     end
+
+    if Rating.exists?(post_id: post_id, user_id: user_id)
+      return render json: {
+        error: "User has already rated this post."
+      }, status: :unprocessable_entity
+    end
+
+    Rating::ProcessJob.perform_later(post_id.to_i, user_id.to_i, value.to_i)
+
+    existing_ratings = Rating.where(post_id: post_id)
+    total_sum = existing_ratings.sum(:value)
+    total_count = existing_ratings.count
+
+    rating_average = ((total_sum + value).to_f / (total_count + 1)).round(2)
+
+    render json: { message: "Rating submitted successfully!", rating_average: rating_average }, status: :accepted
+  end
+
+  private
+
+  def rating_params
+    params.require(:rating).permit(:post_id, :user_id, :value)
   end
 end
