@@ -23,18 +23,9 @@ class Api::V1::RatingsController < ApplicationController
 
     Rating::ProcessJob.perform_later(post_id.to_i, user_id.to_i, value.to_i)
 
-    existing_ratings = Rating.where(post_id: post_id)
-    total_sum = existing_ratings.sum(:value)
-    total_count = existing_ratings.count
+    post  = Post.find(post_id)
+    average_rating = post.rating_average(value)
 
-    rating_average = ((total_sum + value).to_f / (total_count + 1)).round(2)
-
-    render json: { message: "Rating submitted successfully!", rating_average: rating_average }, status: :accepted
-  end
-
-  private
-
-  def rating_params
-    params.require(:rating).permit(:post_id, :user_id, :value)
+    render json: { message: "Rating submitted successfully!", rating_average: average_rating }, status: :accepted
   end
 end

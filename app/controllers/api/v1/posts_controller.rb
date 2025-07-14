@@ -15,6 +15,11 @@ class Api::V1::PostsController < ApplicationController
     render_error(e.message, :unprocessable_entity)
   end
 
+  def best_posts
+    posts = Post.best_rated(10)
+    render json: posts.as_json(only: [ :id, :title, :body ])
+  end
+
   private
 
   def post_params

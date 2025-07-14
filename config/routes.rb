@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get "posts/index"
+      get "posts/best", to: "posts#best_posts"
       resources :users, only: [ :index, :create ]
       resources :posts, only: [ :index, :create ]
       resources :ratings, only: [ :index, :create ]
