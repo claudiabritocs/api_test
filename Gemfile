@@ -46,6 +46,8 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "mocha"
+
+  gem "faker"
 end
 
 gem "sidekiq", "~> 8.0"
