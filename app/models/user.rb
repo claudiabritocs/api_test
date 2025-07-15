@@ -7,4 +7,10 @@ class User < ApplicationRecord
     with: /\A[a-zA-Z0-9@_.-]+\z/,
     message: "only allows letters, numbers, underscores, dots and dashes"
   }
+
+  scope :ips_and_users, -> {
+    joins(:posts)
+    .select("posts.ip AS ip, array_agg(DISTINCT users.login) AS logins")
+    .group("posts.ip")
+  }
 end

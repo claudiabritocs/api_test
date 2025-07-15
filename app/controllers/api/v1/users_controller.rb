@@ -16,6 +16,11 @@ module Api
         render json: user, status: :created
       end
 
+      def get_by_ip
+        ips = User.ips_and_users
+        render json: ips.map { |record| { ip: record.ip, logins: record.logins } }
+      end
+
       private
 
       def user_params

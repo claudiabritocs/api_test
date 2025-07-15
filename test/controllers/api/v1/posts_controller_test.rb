@@ -7,7 +7,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get api_v1_posts_index_path
+    get api_v1_posts_path
     assert_response :success
     json = JSON.parse(response.body)
     assert_kind_of Array, json

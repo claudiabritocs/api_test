@@ -15,7 +15,7 @@ class Api::V1::RatingsControllerTest < ActionDispatch::IntegrationTest
   test "should enqueue Rating::ProcessJob with valid params" do
     ActiveJob::Base.queue_adapter = :test
 
-    assert_enqueued_with(job: Rating::ProcessJob, args: [ posts(:one).id.to_s, users(:default_user).id.to_s, 4 ]) do
+    assert_enqueued_with(job: Rating::ProcessJob, args: [ posts(:one).id, users(:default_user).id, 4 ]) do
       post api_v1_ratings_url, params: {
         rating: {
           post_id: posts(:one).id,
