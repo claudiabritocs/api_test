@@ -2,12 +2,21 @@ class CreatePostWithUser
     def initialize(params, ip)
         @params = params
         @ip = ip
+        @login = @params[:login]
+        @user_id = @params[:user_id]
     end
 
     def call
-        login = @params[:login]
-        user_id = @params[:user_id]
+        fetch_user
+        Post.new(handle_post_params)
+    end
 
+    private
+
+    attr_accessor :user
+    attr_reader :params, :user_id, :login, :ip
+
+    def fetch_user
         if login.present?
             user = User.find_or_create_by(login: login)
             if user_id.present? && user.id != user_id.to_i
@@ -18,8 +27,10 @@ class CreatePostWithUser
         else
             raise ArgumentError, "Login or user_id required"
         end
+    end
 
+    def handle_post_params
         filtered_params = @params.except(:login, :user_id)
-        Post.new(filtered_params.merge(user: user, ip: @ip))
+        filtered_params.merge(user: user, ip: ip)
     end
 end
