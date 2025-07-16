@@ -48,6 +48,8 @@ group :development, :test do
   gem "mocha"
 
   gem "faker"
+
+  gem "rack-cors"
 end
 
 gem "sidekiq", "~> 8.0"
