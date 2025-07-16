@@ -22,10 +22,11 @@ class Api::V1::RatingsController < ApplicationController
     Rating::ProcessJob.perform_later(post_id.to_i, user_id.to_i, value.to_i)
 
     render json: { message: "Rating submitted successfully!", rating_average: Post.find(post_id).rating_average(value) }, status: :accepted
+  end
 
-    private
-    def rating_params
-      params.require(:rating).permit(:post_id, :user_id, :value)
-    end
+  private
+
+  def rating_params
+    params.require(:rating).permit(:post_id, :user_id, :value)
   end
 end
