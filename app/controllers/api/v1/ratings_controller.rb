@@ -5,8 +5,6 @@ class Api::V1::RatingsController < ApplicationController
   end
 
   def create
-    rating_params = params.require(:rating).permit(:post_id, :user_id, :value)
-
     post_id = rating_params[:post_id]
     user_id = rating_params[:user_id]
     value = rating_params[:value].to_i
@@ -23,9 +21,11 @@ class Api::V1::RatingsController < ApplicationController
 
     Rating::ProcessJob.perform_later(post_id.to_i, user_id.to_i, value.to_i)
 
-    post  = Post.find(post_id)
-    average_rating = post.rating_average(value)
+    render json: { message: "Rating submitted successfully!", rating_average: Post.find(post_id).rating_average(value) }, status: :accepted
 
-    render json: { message: "Rating submitted successfully!", rating_average: average_rating }, status: :accepted
+    private
+    def rating_params
+      params.require(:rating).permit(:post_id, :user_id, :value)
+    end
   end
 end
