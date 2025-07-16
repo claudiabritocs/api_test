@@ -18,12 +18,14 @@ class CreatePostWithUser
 
     def fetch_user
         if login.present?
-            user = User.find_or_create_by(login: login)
+            self.user = User.find_or_create_by(login: login)
+
             if user_id.present? && user.id != user_id.to_i
                 raise ArgumentError, "user_id does not match the login provided"
             end
+
         elsif user_id.present?
-            user = User.find(user_id)
+            self.user = User.find(user_id)
         else
             raise ArgumentError, "Login or user_id required"
         end

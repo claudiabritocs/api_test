@@ -50,6 +50,8 @@ group :development, :test do
   gem "faker"
 
   gem "rack-cors"
+
+  gem "typhoeus"
 end
 
 gem "sidekiq", "~> 8.0"
